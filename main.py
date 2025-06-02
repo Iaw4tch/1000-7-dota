@@ -307,6 +307,9 @@ def app_create():
   return root, bentrys, labels, entrys
 
 
+# def check_admin():
+
+
 def main():
   global bentrys, labels, entrys, input_data
   # try:
