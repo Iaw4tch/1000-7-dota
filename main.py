@@ -4,6 +4,8 @@ import os
 import ctypes
 import sys
 from threading import Thread, Event
+from keyboard import *
+from time import sleep
 
 
 class bEntry(ttk.Button):
@@ -46,21 +48,60 @@ def key_pressed(event):
       bentry.is_reading_key = False
 
 
+def action(i, mode):
+  press_and_release('shift+enter')
+  sleep(0.1)
+  write(f"{i}-7={i-7}\n" if mode == '-' else f"{i}+7={i+7}\n")
+
+
+def do():
+  if input_data['start'] == 'f9':
+    for i in range(3, 0, -1):
+      print(i)
+      sleep(1)
+
+  def loop():
+    if input_data['end'] <= 1000:
+      step = -7
+      end = input_data['end']+7-1
+      mode = '-'
+    else:
+      step = 7
+      end = input_data['end']-7+1
+      mode = '+'
+    for i in range(1000, end, step):
+      if flag.is_set():
+        flag.clear()
+        break
+      action(i, mode)
+  Thread(target=loop, daemon=True).start()
+
+
+def start():
+  global flag
+  flag = Event()
+  add_hotkey(input_data['start'], do)
+  add_hotkey(input_data['stop'], lambda: flag.set())
+
+
 def insert():
   global input_data
-  input_data.update(
-      {'start': start_bentry.config('text')[-1], 'stop': stop_bentry.config('text')[-1], 'end': int(end_entry.get())})
-  phrases = ('Запуск:', 'Остановка:')
-  for phrase, label, bentry in zip(phrases,
-                                   (start_label, stop_label),
-                                   (start_bentry, stop_bentry)):
-    label.config(text=phrase)
-    bentry.config(state='disabled')
-  end_label.config(text='Порог окончания:')
-  end_entry.config(state='disabled', style='Finished.TEntry')
-  Thread(target=start).start()
-
-  # Thread(target=starting).start()
+  if end_entry.get() != '':
+    warning_label.pack_forget()
+    input_data.update(
+        {'start': start_bentry.config('text')[-1], 'stop': stop_bentry.config('text')[-1], 'end': int(end_entry.get())})
+    phrases = ('Запуск:', 'Остановка:')
+    for phrase, label, bentry in zip(phrases,
+                                     (start_label, stop_label),
+                                     (start_bentry, stop_bentry)):
+      label.config(text=phrase)
+      bentry.config(state='disabled')
+    end_label.config(text='Порог окончания:')
+    end_entry.config(state='disabled', style='Finished.TEntry')
+    button_insert.pack_forget()
+    Thread(target=start, daemon=True).start()
+  else:
+    warning_label.pack(side='left')
 
 
 def is_admin():
@@ -160,6 +201,13 @@ if __name__ == "__main__":
                     'lightcolor': '#f0f0f0',
                     'bordercolor': '#c7c7c7',
                 }
+            },
+            'Warning.TLabel': {
+                'configure': {
+                    'foreground': 'red',
+                    'font': ('Arial', 15),
+                    'padding': 5
+                }
             }
         }
     )
@@ -200,11 +248,11 @@ if __name__ == "__main__":
     button_frame.grid(row=4, column=0, columnspan=2,
                       pady=(10, 0), sticky='nsew')
 
-    button_ok = ttk.Button(button_frame, text="Cancel")
-    button_ok.pack(side=tk.RIGHT, padx=(5, 0))
+    button_insert = ttk.Button(button_frame, text="Insert", command=insert)
+    button_insert.pack(side=tk.RIGHT, padx=(5, 0))
 
-    button_cancel = ttk.Button(button_frame, text="OK", command=insert)
-    button_cancel.pack(side=tk.RIGHT)
+    warning_label = ttk.Label(
+        button_frame, text="Заполните поле", style='Warning.TLabel')
 
     # Подпись версии
     version_frame = ttk.Frame(main_frame)
