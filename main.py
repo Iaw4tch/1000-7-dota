@@ -5,6 +5,7 @@ import ctypes
 import sys
 from threading import Thread, Event
 from keyboard import *
+import themes
 from time import sleep
 
 
@@ -142,75 +143,7 @@ if __name__ == "__main__":
     VERSION = "v0.0.1a 2025"
 
     # Настройка темной темы
-    style = ttk.Style()
-    style.theme_create(
-        'dark',
-        parent='clam',
-        settings={
-            '.': {
-                'configure': {
-                    'background': '#313131',
-                    'foreground': 'white'
-                }
-            },
-            'TButton': {
-                'configure': {
-                    'anchor': 'c',
-                    'background': "#444444",
-                    'foreground': 'white',
-                    'padding': 6,
-                    'font': ('Helvetica', 14, 'bold'),
-                    'borderwidth': 1,
-                    'lightcolor': '#f0f0f0',
-                    'bordercolor': '#c7c7c7',
-                    'relief': 'sunken'
-                },
-                'map': {
-                    'background': [('active', '#666666'), ('pressed', '#444444')]
-                }
-            },
-            'TEntry': {
-                'configure': {
-                    'fieldbackground': '#444444',
-                    'foreground': 'white',
-                    'insertcolor': 'white'
-                }
-            },
-            'TLabel': {
-                'configure': {
-                    'foreground': 'white',
-                    'padding': 5,
-                    'font': ('Arial', 15)
-                }
-            },
-            'Title.TLabel': {
-                'configure': {
-                    'font': ('Helvetica', 20, 'bold'),
-                }
-            },
-            'Version.TLabel': {
-                'configure': {
-                    'font': ('Helvetica', 8),
-                    'foreground': '#aaaaaa'
-                }
-            },
-            'Finished.TEntry': {
-                'configure': {
-                    'fieldbackground': '#444444',
-                    'foreground': 'white',
-                    'lightcolor': '#f0f0f0',
-                    'bordercolor': '#c7c7c7',
-                }
-            },
-            'Warning.TLabel': {
-                'configure': {
-                    'foreground': 'red',
-                    'font': ('Arial', 15),
-                    'padding': 5
-                }
-            }
-        }
-    )
+    style = themes.style()
 
     style.theme_use('dark')
 
