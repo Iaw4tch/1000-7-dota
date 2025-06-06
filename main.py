@@ -1,8 +1,7 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox, StringVar
 import os
 import ctypes
-import sys
 from threading import Thread, Event
 from keyboard import *
 import themes
@@ -79,30 +78,48 @@ def do():
 
 
 def start():
-  global flag
+  global flag, stop_start_def
   flag = Event()
   add_hotkey(input_data['start'], do)
   add_hotkey(input_data['stop'], lambda: flag.set())
+  while not stop_start_def:
+    sleep(0.5)
+  stop_start_def = False
+  unhook_all_hotkeys()
 
 
-def insert():
-  global input_data
-  if end_entry.get() != '':
-    warning_label.pack_forget()
-    input_data.update(
-        {'start': start_bentry.config('text')[-1], 'stop': stop_bentry.config('text')[-1], 'end': int(end_entry.get())})
-    phrases = ('Запуск:', 'Остановка:')
+def switch():
+  global input_data, inserting, stop_start_def
+  if inserting:
+    if end_entry.get() != '':
+      inserting = False
+      warning_label.pack_forget()
+      input_data.update(
+          {'start': start_bentry.config('text')[-1], 'stop': stop_bentry.config('text')[-1], 'end': int(end_entry.get())})
+      phrases = ('Запуск:', 'Остановка:')
+      for phrase, label, bentry in zip(phrases,
+                                       (start_label, stop_label),
+                                       (start_bentry, stop_bentry)):
+        label.config(text=phrase)
+        bentry.config(state='disabled')
+      end_label.config(text='Порог окончания:')
+      end_entry.config(state='disabled', style='Finished.TEntry')
+      switch_button.config(text='Cancel')
+      Thread(target=start, daemon=True).start()
+    else:
+      warning_label.pack(side='left')
+  else:
+    stop_start_def = True
+    inserting = True
+    phrases = ('Кнопка запуска:', 'Кнопка остановки:')
     for phrase, label, bentry in zip(phrases,
                                      (start_label, stop_label),
                                      (start_bentry, stop_bentry)):
       label.config(text=phrase)
-      bentry.config(state='disabled')
-    end_label.config(text='Порог окончания:')
-    end_entry.config(state='disabled', style='Finished.TEntry')
-    button_insert.pack_forget()
-    Thread(target=start, daemon=True).start()
-  else:
-    warning_label.pack(side='left')
+      bentry.config(state='enabled')
+    end_label.config(text='Окончание после:')
+    end_entry.config(state='enabled', style='TEntry')
+    switch_button.config(text='Insert')
 
 
 def is_admin():
@@ -112,94 +129,82 @@ def is_admin():
     return False
 
 
-def give_warning():
-  kernel32 = ctypes.windll.kernel32
-  kernel32.FreeConsole()
-  kernel32.AllocConsole()
-  sys.stdout = open("CONOUT$", "w")
-  sys.stdin = open("CONIN$", "r")
-  print("ОШИБКА: Программа требует прав администратора!")
-  print("Запустите её от имени администратора.")
-  input("Нажмите Enter для выхода...")
-
-
 if __name__ == "__main__":
+  root = tk.Tk()
+  root.title("1000-7")
+
+  # Установка минимального и максимального размеров окна
+  root.minsize(360, 340)  # Минимальный размер
+  root.maxsize(490, 365)   # Максимальный размер
+  root.geometry("360x340")
+
+  # иконка
+  icon_path = os.path.join(os.path.dirname(__file__), 'app_icon.ico')
+  root.iconbitmap(icon_path)
+  input_data = {}
+  VERSION = "v0.0.1a 2025"
+  stop_start_def = False
+
+  # Настройка темной темы
+  style = themes.style()
+  style.theme_use('dark')
+
+  # Основной фрейм
+  main_frame = ttk.Frame(root, padding=20)
+  main_frame.pack(fill=tk.BOTH, expand=True)
+
+  # Создание валидатора
+  validate_digit_command = main_frame.register(validate_digit_input)
+
+  # Заголовок приложения
+  title_label = ttk.Label(
+      main_frame, text="ZXC flooder", style='Title.TLabel')
+  title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+  # Поля ввода
+  start_label = ttk.Label(main_frame, text="Кнопка запуска:")
+  start_label.grid(row=1, column=0, sticky='nse', pady=(0, 5))
+  start_bentry = bEntry(main_frame, text="i", style='TButton')
+  start_bentry.grid(row=1, column=1, sticky='nsew', pady=(0, 5))
+
+  stop_label = ttk.Label(main_frame, text="Кнопка остановки:")
+  stop_label.grid(row=2, column=0, sticky='nse', pady=(10, 10))
+  stop_bentry = bEntry(main_frame, text="o", style='TButton')
+  stop_bentry.grid(row=2, column=1, sticky='nsew', pady=(10, 10))
+
+  end_text = StringVar(value='0')
+  end_label = ttk.Label(main_frame, text="Окончание после:")
+  end_label.grid(row=3, column=0, sticky='nse', pady=(0, 5))
+  end_entry = ttk.Entry(main_frame, textvariable=end_text, validate="key",
+                        validatecommand=(validate_digit_command, '%P'), justify='center', font=('Helvetica', 14, 'bold'))
+  end_entry.grid(row=3, column=1, sticky='nsew', pady=(0, 5))
+
+  # Добавляем кнопки в следующей строке (row=4)
+  switch_frame = ttk.Frame(main_frame)
+  switch_frame.grid(row=4, column=0, columnspan=2,
+                    pady=(10, 0), sticky='nsew')
+  inserting = True
+  switch_button = ttk.Button(switch_frame, text="Insert", command=switch)
+  switch_button.pack(side=tk.RIGHT, padx=(5, 0))
+
+  warning_label = ttk.Label(
+      switch_frame, text="Заполните поле", style='Warning.TLabel')
+
+  # Подпись версии
+  version_frame = ttk.Frame(main_frame)
+  version_frame.grid(row=5, column=0, columnspan=2,
+                     sticky=tk.SE, pady=(20, 0))
+  version_label = ttk.Label(
+      version_frame, text=VERSION, style='Version.TLabel')
+  version_label.pack()
+
+  # Настройка растягивания
+  main_frame.columnconfigure(1, weight=1)
+  main_frame.rowconfigure(4, weight=1)
+  root.bind("<Key>", key_pressed)
+
   if not is_admin():
-    give_warning()
-  else:
-    root = tk.Tk()
-    root.title("1000-7")
+    messagebox.showwarning(
+        "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста")
 
-    # Установка минимального и максимального размеров окна
-    root.minsize(360, 340)  # Минимальный размер
-    root.maxsize(490, 365)   # Максимальный размер
-    root.geometry("360x340")
-
-    # иконка
-    icon_path = os.path.join(os.path.dirname(__file__), 'app_icon.ico')
-    root.iconbitmap(icon_path)
-
-    input_data = {}
-    VERSION = "v0.0.1a 2025"
-
-    # Настройка темной темы
-    style = themes.style()
-
-    style.theme_use('dark')
-
-    # Основной фрейм
-    main_frame = ttk.Frame(root, padding=20)
-    main_frame.pack(fill=tk.BOTH, expand=True)
-
-    # Создание валидатора
-    validate_digit_command = main_frame.register(validate_digit_input)
-
-    # Заголовок приложения
-    title_label = ttk.Label(
-        main_frame, text="ZXC flooder", style='Title.TLabel')
-    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
-
-    # Поля ввода
-    start_label = ttk.Label(main_frame, text="Кнопка запуска:")
-    start_label.grid(row=1, column=0, sticky='nse', pady=(0, 5))
-    start_bentry = bEntry(main_frame, text="i", style='TButton')
-    start_bentry.grid(row=1, column=1, sticky='nsew', pady=(0, 5))
-
-    stop_label = ttk.Label(main_frame, text="Кнопка остановки:")
-    stop_label.grid(row=2, column=0, sticky='nse', pady=(10, 10))
-    stop_bentry = bEntry(main_frame, text="o", style='TButton')
-    stop_bentry.grid(row=2, column=1, sticky='nsew', pady=(10, 10))
-
-    end_label = ttk.Label(main_frame, text="Окончание после:")
-    end_label.grid(row=3, column=0, sticky='nse', pady=(0, 5))
-    end_entry = ttk.Entry(main_frame, validate="key",
-                          validatecommand=(validate_digit_command, '%P'), justify='center', font=('Helvetica', 14, 'bold'))
-    end_entry.grid(row=3, column=1, sticky='nsew', pady=(0, 5))
-
-    # Добавляем кнопки в следующей строке (row=4)
-    button_frame = ttk.Frame(main_frame)
-    button_frame.grid(row=4, column=0, columnspan=2,
-                      pady=(10, 0), sticky='nsew')
-
-    button_insert = ttk.Button(button_frame, text="Insert", command=insert)
-    button_insert.pack(side=tk.RIGHT, padx=(5, 0))
-
-    warning_label = ttk.Label(
-        button_frame, text="Заполните поле", style='Warning.TLabel')
-
-    # Подпись версии
-    version_frame = ttk.Frame(main_frame)
-    version_frame.grid(row=5, column=0, columnspan=2,
-                       sticky=tk.SE, pady=(20, 0))
-
-    version_label = ttk.Label(
-        version_frame, text=VERSION, style='Version.TLabel')
-    version_label.pack()
-
-    # Настройка растягивания
-    main_frame.columnconfigure(1, weight=1)
-    main_frame.rowconfigure(4, weight=1)
-
-    root.bind("<Key>", key_pressed)
-
-    root.mainloop()
+  root.mainloop()
