@@ -186,6 +186,12 @@ if __name__ == "__main__":
   inserting = True
   switch_button = ttk.Button(switch_frame, text="Insert", command=switch)
   switch_button.pack(side=tk.RIGHT, padx=(5, 0))
+  theme_selector = ttk.Combobox(
+      switch_frame, values=["light", "dark", "black"], state="readonly", width=5)
+  theme_selector.set('dark')
+  theme_selector.pack(side='right')
+  theme_selector.bind("<<ComboboxSelected>>",
+                      lambda e: style.theme_use(theme_selector.get()))
 
   warning_label = ttk.Label(
       switch_frame, text="Заполните поле", style='Warning.TLabel')
