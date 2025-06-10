@@ -28,7 +28,7 @@ class bEntry(ttk.Button):
 
 
 def validate_digit_input(new_value):
-  if new_value in ("", '-') or new_value.isdigit() or ('-' in new_value and new_value[1:].isdigit()):
+  if new_value in ("", '-') or new_value.isdigit() or (new_value.startswith('-') and new_value[1:].isdigit()):
     return True
   return False
 
