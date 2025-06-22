@@ -77,16 +77,21 @@ def style():
         settings={
             '.': {
                 'configure': {
-                    'background': '',
-                    'foreground': '',
+                    'background': '#181818',
+                    'foreground': '#bababa'
                 }
             },
             'TButton': {
                 'configure': {
-                    'background': "#444444",
-                    'foreground': 'white',
+                    'anchor': 'c',
+                    'background': "#191919",
+                    'foreground': '#bababa',
                     'padding': 6,
-                    'font': ('Helvetica', 14, 'bold')
+                    'font': ('Helvetica', 14, 'bold'),
+                    'borderwidth': 1,
+                    'lightcolor': '#c5c5c5',
+                    'bordercolor': '#c7c7c7',
+                    'relief': 'sunken'
                 },
                 'map': {
                     'background': [('active', '#666666'), ('pressed', '#444444')]
@@ -94,28 +99,42 @@ def style():
             },
             'TEntry': {
                 'configure': {
-                    'fieldground': '#444444',
-                    'foreground': 'white',
-                    'insertcolor': 'white'
+                    'fieldbackground': '#191919',
+                    'foreground': '#bababa',
+                    'insertcolor': '#bababa'
                 }
             },
             'TLabel': {
                 'configure': {
-                    'background': '#333333',
-                    'foreground': 'white',
+                    'foreground': '#bababa',
                     'padding': 5,
                     'font': ('Arial', 15)
                 }
             },
-            'Title.Label': {
+            'Title.TLabel': {
                 'configure': {
-                    'font': ('Helvetica', 14, 'bold')
+                    'font': ('Helvetica', 20, 'bold'),
                 }
             },
-            'Version.Label': {
+            'Version.TLabel': {
                 'configure': {
                     'font': ('Helvetica', 8),
                     'foreground': '#aaaaaa'
+                }
+            },
+            'Finished.TEntry': {
+                'configure': {
+                    'fieldbackground': '#444444',
+                    'foreground': '#bababa',
+                    'lightcolor': '#f0f0f0',
+                    'bordercolor': '#c7c7c7',
+                }
+            },
+            'Warning.TLabel': {
+                'configure': {
+                    'foreground': 'red',
+                    'font': ('Arial', 15),
+                    'padding': 5
                 }
             }
         }
@@ -127,45 +146,62 @@ def style():
         settings={
             '.': {
                 'configure': {
-                    'background': '',
-                    'foreground': '',
+                    'background': '#d9d9d9',
+                    'foreground': '#222222'
                 }
             },
             'TButton': {
                 'configure': {
-                    'background': "#444444",
-                    'foreground': 'white',
+                    'anchor': 'c',
+                    'background': "#f7f7f7",
                     'padding': 6,
-                    'font': ('Helvetica', 14, 'bold')
+                    'font': ('Helvetica', 14, 'bold'),
+                    'borderwidth': 1,
+                    'lightcolor': '#a2a2a2',
+                    'bordercolor': '#222222',
+                    'relief': 'sunken'
                 },
                 'map': {
-                    'background': [('active', '#666666'), ('pressed', '#444444')]
+                    'background': [('active', '#cccccc'), ('pressed', '#444444')]
                 }
             },
             'TEntry': {
                 'configure': {
-                    'fieldground': '#444444',
-                    'foreground': 'white',
-                    'insertcolor': 'white'
+                    'fieldbackground': '#f7f7f7',
+                    'insertcolor': '#bababa'
                 }
             },
             'TLabel': {
                 'configure': {
-                    'background': '#333333',
-                    'foreground': 'white',
+                    'foreground': 'black',
                     'padding': 5,
                     'font': ('Arial', 15)
                 }
             },
-            'Title.Label': {
+            'Title.TLabel': {
                 'configure': {
-                    'font': ('Helvetica', 14, 'bold')
+                    'font': ('Helvetica', 20, 'bold'),
                 }
             },
-            'Version.Label': {
+            'Version.TLabel': {
                 'configure': {
                     'font': ('Helvetica', 8),
                     'foreground': '#aaaaaa'
+                }
+            },
+            'Finished.TEntry': {
+                'configure': {
+                    'fieldbackground': '#444444',
+                    'foreground': '#bababa',
+                    'lightcolor': '#f0f0f0',
+                    'bordercolor': '#c7c7c7',
+                }
+            },
+            'Warning.TLabel': {
+                'configure': {
+                    'foreground': 'red',
+                    'font': ('Arial', 15),
+                    'padding': 5
                 }
             }
         }
