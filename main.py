@@ -1,39 +1,53 @@
 import tkinter as tk
+from tkinter import Event as tkEvent
 from tkinter import ttk, messagebox, StringVar
 import os
 import ctypes
 from threading import Thread, Event
-from keyboard import *
+from keyboard import press_and_release, write, add_hotkey, unhook_all_hotkeys
 import themes
 from time import sleep
+from typing import Any, TypedDict
 
 
 class bEntry(ttk.Button):
-  def __init__(self, *args, **kwargs):
+  def __init__(self, *args: Any, **kwargs: Any):
     super().__init__(*args, **kwargs)
     self.configure(command=self.read_button)
     self.is_reading_key = False
     self.button = self.config('text')[-1]
 
   def read_button(self):
-    if self.is_reading_key:
-      self.is_reading_key = False
-      self.config(text=self.button)
-    else:
-      self.is_reading_key = True
-      if not all(bentry.is_reading_key for bentry in (start_bentry, stop_bentry)):
-        self.config(state="normal", text="___")
-        return
-      self.is_reading_key = False
+    if pressing:
+      if self.is_reading_key:
+        self.is_reading_key = False
+        self.config(text=self.button)
+      else:
+        self.is_reading_key = True
+        if not all(bentry.is_reading_key for bentry in (start_bentry, stop_bentry)):
+          self.config(state="normal", text="___")
+          return
+        self.is_reading_key = False
 
+class InputData(TypedDict):
+  start: str
+  stop: str
+  end: int
 
-def validate_digit_input(new_value):
+def validate_digit_input(new_value: str) -> bool:
   if new_value in ("", '-') or new_value.isdigit() or (new_value.startswith('-') and new_value[1:].isdigit()):
     return True
   return False
 
+def pressed(event: tkEvent):
+  global pressing
+  pressing=True
 
-def key_pressed(event):
+def released(event: tkEvent):
+  global pressing
+  pressing=False
+
+def key_pressed(event: tkEvent):
   for bentry in (start_bentry, stop_bentry):
     if bentry.is_reading_key:
       if str(event.char) == '':
@@ -41,14 +55,13 @@ def key_pressed(event):
       elif str(event.keysym) == '??':
         key = str(event.char)
       else:
-        key = str(event.char)
-      print(f"Key Pressed on {bentry}: " + key)
+        key = str(event.keysym)
       bentry.button = key
       bentry.config(text=bentry.button)
       bentry.is_reading_key = False
 
 
-def action(i, mode):
+def action(i: int, mode: str):
   press_and_release('shift+enter')
   sleep(0.1)
   write(f"{i}-7={i-7}\n" if mode == '-' else f"{i}+7={i+7}\n")
@@ -140,8 +153,9 @@ if __name__ == "__main__":
 
   # иконка
   icon_path = os.path.join(os.path.dirname(__file__), 'app_icon.ico')
-  root.iconbitmap(icon_path)
-  input_data = {}
+  root.iconbitmap(icon_path)  # type: ignore
+  input_data: InputData = {'start':'i', 'stop':'o', 'end':0}
+  pressing=False
   VERSION = "v0.0.1a 2025"
   stop_start_def = False
 
@@ -207,10 +221,13 @@ if __name__ == "__main__":
   # Настройка растягивания
   main_frame.columnconfigure(1, weight=1)
   main_frame.rowconfigure(4, weight=1)
+  root.bind("<Button-1>", pressed)
+  root.bind("<ButtonRelease-1>", released)
   root.bind("<Key>", key_pressed)
+  
 
   if not is_admin():
-    messagebox.showwarning(
-        "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста")
+    messagebox.showwarning(  # type: ignore
+        "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста") 
 
   root.mainloop()
