@@ -3,7 +3,7 @@ from tkinter import ttk
 
 def style():
   st = ttk.Style()
-  st.theme_create(
+  st.theme_create( # type: ignore
       'dark',
       parent='clam',
       settings={
@@ -83,7 +83,7 @@ def style():
       }
   )
 
-  st.theme_create(
+  st.theme_create(  # type: ignore
       'light',
       parent='clam',
       settings={
@@ -163,7 +163,7 @@ def style():
       }
   )
 
-  st.theme_create(
+  st.theme_create(  # type: ignore
       'black',
       parent='clam',
       settings={
