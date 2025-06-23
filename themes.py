@@ -89,36 +89,35 @@ def style():
       settings={
           '.': {
               'configure': {
-                  'background': '#313131',
-                  'foreground': 'white'
+                  'background': '#d9d9d9',
+                  'foreground': '#222222'
               }
           },
           'TButton': {
               'configure': {
                   'anchor': 'c',
-                  'background': "#444444",
-                  'foreground': 'white',
+                  'background': "#f7f7f7",
                   'padding': 6,
                   'font': ('Helvetica', 14, 'bold'),
                   'borderwidth': 1,
-                  'lightcolor': '#f0f0f0',
-                  'bordercolor': '#c7c7c7',
+                  'lightcolor': '#a2a2a2',
+                  'bordercolor': '#222222',
                   'relief': 'sunken'
               },
               'map': {
-                  'background': [('active', '#666666'), ('pressed', '#444444')]
+                  'background': [('active', '#cccccc'), ('pressed', '#444444')]
               }
           },
           'TEntry': {
               'configure': {
-                  'fieldbackground': '#444444',
-                  'foreground': 'white',
-                  'insertcolor': 'white'
+                  'fieldbackground': '#f7f7f7',
+                  'foreground': '#bababa',
+                  'insertcolor': '#bababa'
               }
           },
           'TLabel': {
               'configure': {
-                  'foreground': 'white',
+                  'foreground': 'black',
                   'padding': 5,
                   'font': ('Arial', 15)
               }
@@ -148,7 +147,7 @@ def style():
           'Finished.TEntry': {
               'configure': {
                   'fieldbackground': '#444444',
-                  'foreground': 'white',
+                  'foreground': '#bababa',
                   'lightcolor': '#f0f0f0',
                   'bordercolor': '#c7c7c7',
               }
@@ -169,19 +168,19 @@ def style():
       settings={
           '.': {
               'configure': {
-                  'background': '#313131',
-                  'foreground': 'white'
+                  'background': '#181818',
+                  'foreground': '#bababa'
               }
           },
           'TButton': {
               'configure': {
                   'anchor': 'c',
-                  'background': "#444444",
-                  'foreground': 'white',
+                  'background': "#191919",
+                  'foreground': '#bababa',
                   'padding': 6,
                   'font': ('Helvetica', 14, 'bold'),
                   'borderwidth': 1,
-                  'lightcolor': '#f0f0f0',
+                  'lightcolor': '#c5c5c5',
                   'bordercolor': '#c7c7c7',
                   'relief': 'sunken'
               },
@@ -191,14 +190,14 @@ def style():
           },
           'TEntry': {
               'configure': {
-                  'fieldbackground': '#444444',
-                  'foreground': 'white',
-                  'insertcolor': 'white'
+                  'fieldbackground': '#191919',
+                  'foreground': '#bababa',
+                  'insertcolor': '#bababa'
               }
           },
           'TLabel': {
               'configure': {
-                  'foreground': 'white',
+                  'foreground': '#bababa',
                   'padding': 5,
                   'font': ('Arial', 15)
               }
@@ -228,7 +227,7 @@ def style():
           'Finished.TEntry': {
               'configure': {
                   'fieldbackground': '#444444',
-                  'foreground': 'white',
+                  'foreground': '#bababa',
                   'lightcolor': '#f0f0f0',
                   'bordercolor': '#c7c7c7',
               }
