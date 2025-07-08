@@ -292,8 +292,8 @@ if __name__ == "__main__":
   root.bind("<ButtonRelease-1>", released)
   root.bind("<Key>", key_pressed)
 
-  # if not is_admin():
-  #   messagebox.showwarning(  # type: ignore
-  #       "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста")
+  if not is_admin():
+    messagebox.showwarning(  # type: ignore
+        "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста")
 
   root.mainloop()
