@@ -212,6 +212,7 @@ def is_admin():
     return False
 
 
+
 if __name__ == "__main__":
   root = tk.Tk()
   root.title("1000-7")
@@ -244,7 +245,7 @@ if __name__ == "__main__":
   title_label = ttk.Label(
       main_frame, text="ZXC flooder", style='Title.TLabel')
   title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
-
+  
   # Поля ввода
   start_label = ttk.Label(main_frame, text="Кнопка запуска:")
   start_label.grid(row=1, column=0, sticky='nse', pady=(0, 5))
