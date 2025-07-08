@@ -9,6 +9,17 @@ import themes
 from time import sleep
 from typing import Any, TypedDict
 
+key_dict: dict[str | tuple[str, ...], str] = {
+    ('Shift_L', 'Shift_R'): 'shift',
+    ('Control_L', 'Control_R'): 'ctrl',
+    ('Alt_L', 'Alt_R'): 'alt',
+    ('Win_L', 'Win_R'): 'win',
+    'Prior': 'pgup',
+    'Next': 'pgdown',
+    'minus': '-',
+    'equal': '=',
+}
+
 
 class bEntry(ttk.Button):
   def __init__(self, *args: Any, **kwargs: Any):
@@ -29,23 +40,73 @@ class bEntry(ttk.Button):
           return
         self.is_reading_key = False
 
+
+class ThemeSelector:
+  def __init__(self, parent: ttk.Frame, options: list[str]):
+    self.button_frame = ttk.Frame(parent)
+    self.var = 'dark'
+    self.button = ttk.Button(
+        self.button_frame, text=f"theme: {self.var}", command=self.toggle_list, style='ThemeSelector.TButton')
+    self.list_frame = ttk.Frame(parent)
+
+    self.visible_list = False
+    self.options = options
+
+  def toggle_list(self):
+    if self.visible_list:
+      self.list_frame.pack_forget()
+      self.button_frame.pack()
+    else:
+      self.button_frame.pack_forget()
+      self.list_frame.pack(fill="x")
+
+      for widget in self.list_frame.winfo_children():
+        widget.destroy()
+
+      for option in self.options:
+        btn = ttk.Button(self.list_frame, text=option,
+                         command=lambda o=option: self.select_option(o), style='ThemeSelector.TButton')
+        btn.pack(padx=2, *self.args, **self.kwargs)
+
+    self.visible_list = not self.visible_list
+
+  def select_option(self, option: str):
+    self.var = option
+    self.list_frame.pack_forget()
+    self.visible_list = False
+    style.theme_use(self.var)
+    self.button_frame.pack(*self.args, **self.kwargs)
+    self.button.config(
+        text=f"theme: {self.var}")
+
+  def pack(self, *args: Any, **kwargs: Any):
+    self.button_frame.pack(*args, **kwargs)
+    self.button.pack(*args, **kwargs)
+    self.args = args
+    self.kwargs = kwargs
+
+
 class InputData(TypedDict):
   start: str
   stop: str
   end: int
+
 
 def validate_digit_input(new_value: str) -> bool:
   if new_value in ("", '-') or new_value.isdigit() or (new_value.startswith('-') and new_value[1:].isdigit()):
     return True
   return False
 
+
 def pressed(event: tkEvent):
   global pressing
-  pressing=True
+  pressing = True
+
 
 def released(event: tkEvent):
   global pressing
-  pressing=False
+  pressing = False
+
 
 def key_pressed(event: tkEvent):
   for bentry in (start_bentry, stop_bentry):
@@ -56,6 +117,15 @@ def key_pressed(event: tkEvent):
         key = str(event.char)
       else:
         key = str(event.keysym)
+      for k in key_dict:
+        if isinstance(k, str):
+          if key == k:
+            key = key_dict[k]
+            break
+        else:
+          if key in k:
+            key = key_dict[k]
+            break
       bentry.button = key
       bentry.config(text=bentry.button)
       bentry.is_reading_key = False
@@ -147,16 +217,16 @@ if __name__ == "__main__":
   root.title("1000-7")
 
   # Установка минимального и максимального размеров окна
-  root.minsize(360, 340)  # Минимальный размер
-  root.maxsize(490, 365)   # Максимальный размер
-  root.geometry("360x340")
+  root.minsize(340, 350)  # Минимальный размер
+  root.maxsize(390, 400)   # Максимальный размер
+  root.geometry("360x350")
 
   # иконка
   icon_path = os.path.join(os.path.dirname(__file__), 'app_icon.ico')
   root.iconbitmap(icon_path)  # type: ignore
-  input_data: InputData = {'start':'i', 'stop':'o', 'end':0}
-  pressing=False
-  VERSION = "v0.0.1a 2025"
+  input_data: InputData = {'start': 'i', 'stop': 'o', 'end': 0}
+  pressing = False
+  VERSION = "v2.0 2025"
   stop_start_def = False
 
   # Настройка темной темы
@@ -200,34 +270,30 @@ if __name__ == "__main__":
   inserting = True
   switch_button = ttk.Button(switch_frame, text="Insert", command=switch)
   switch_button.pack(side=tk.RIGHT, padx=(5, 0))
-  theme_selector = ttk.Combobox(
-      switch_frame, values=["light", "dark", "black"], state="readonly", width=5)
-  theme_selector.set('dark')
-  theme_selector.pack(side='right')
-  theme_selector.bind("<<ComboboxSelected>>",
-                      lambda e: style.theme_use(theme_selector.get()))
 
   warning_label = ttk.Label(
-      switch_frame, text="Заполните поле", style='Warning.TLabel')
+      switch_frame, text="Заполните поле", style='Warning.TLabel')\
 
   # Подпись версии
   version_frame = ttk.Frame(main_frame)
   version_frame.grid(row=5, column=0, columnspan=2,
-                     sticky=tk.SE, pady=(20, 0))
+                     sticky='wse', pady=(20, 0))
   version_label = ttk.Label(
       version_frame, text=VERSION, style='Version.TLabel')
-  version_label.pack()
+  version_label.pack(side='right')
+  theme_selector = ThemeSelector(
+      version_frame, options=["light", "dark", "contrast"])
+  theme_selector.pack(side='left')
 
   # Настройка растягивания
   main_frame.columnconfigure(1, weight=1)
-  main_frame.rowconfigure(4, weight=1)
+  main_frame.rowconfigure(5, weight=1)
   root.bind("<Button-1>", pressed)
   root.bind("<ButtonRelease-1>", released)
   root.bind("<Key>", key_pressed)
-  
 
-  if not is_admin():
-    messagebox.showwarning(  # type: ignore
-        "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста") 
+  # if not is_admin():
+  #   messagebox.showwarning(  # type: ignore
+  #       "Предупреждение", "Программа запущена без прав администратора!\nВозможны проблемы с печатью текста")
 
   root.mainloop()
