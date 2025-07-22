@@ -138,7 +138,7 @@ def action(i: int, mode: str):
 
 
 def do():
-  if input_data['start'] == 'f9':
+  if input_data['start'] == 'F9':
     for i in range(3, 0, -1):
       print(i)
       sleep(1)
