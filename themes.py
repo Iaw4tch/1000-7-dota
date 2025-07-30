@@ -26,7 +26,7 @@ def style():
                   'borderwidth': 1,
                   'lightcolor': '#f0f0f0',
                   'bordercolor': '#c7c7c7',
-                  'relief': 'sunken'
+                  'relief': 'solid'
               },
               'map': {
                   'background': [('active', '#666666'), ('pressed', '#444444')]
@@ -37,11 +37,10 @@ def style():
                   'fieldbackground': "#444444",
                   'foreground': 'white',
                   'padding': 6,
-                  'font': ('Helvetica', 14, 'bold'),
                   'borderwidth': 1,
                   'lightcolor': '#f0f0f0',
                   'bordercolor': '#c7c7c7',
-                  'relief': 'sunken'
+                  'relief': 'solid'
               }
           },
           'TLabel': {
@@ -62,14 +61,6 @@ def style():
                   'foreground': '#aaaaaa'
               }
           },
-          'Finished.TEntry': {
-              'configure': {
-                  'fieldbackground': '#444444',
-                  'foreground': 'white',
-                  'lightcolor': '#f0f0f0',
-                  'bordercolor': '#c7c7c7',
-              }
-          },
           'Warning.TLabel': {
               'configure': {
                   'foreground': 'red',
@@ -77,7 +68,7 @@ def style():
                   'padding': 5
               }
           },
-          'ThemeSelector.TButton': {
+          'Selectors.TButton': {
               'configure': {
                   'anchor': 'c',
                   'background': "#444444",
@@ -87,7 +78,7 @@ def style():
                   'borderwidth': 1,
                   'lightcolor': '#f0f0f0',
                   'bordercolor': '#c7c7c7',
-                  'relief': 'sunken'
+                  'relief': 'solid'
               },
               'map': {
                   'background': [('active', '#666666'), ('pressed', '#444444')]
@@ -105,7 +96,7 @@ def style():
                   'background': '#dfdfdf',
                   'foreground': 'black',
                   'insertcolor': 'black',
-                  
+
               }
           },
           'TButton': {
@@ -118,7 +109,7 @@ def style():
                   'borderwidth': 1,
                   'lightcolor': '#ffffff',
                   'bordercolor': '#a0a0a0',
-                  'relief': 'raised'
+                  'relief': 'solid'
               },
               'map': {
                   'background': [('active', '#d0d0d0'), ('pressed', '#b0b0b0')]
@@ -129,11 +120,10 @@ def style():
                   'fieldbackground': '#e0e0e0',
                   'foreground': 'black',
                   'padding': 6,
-                  'font': ('Helvetica', 14, 'bold'),
                   'borderwidth': 1,
-                  'lightcolor': '#ffffff',
+                  'lightcolor': '#a0a0a0',
                   'bordercolor': '#a0a0a0',
-                  'relief': 'raised'
+                  'relief': 'solid'
               }
           },
           'TLabel': {
@@ -154,14 +144,6 @@ def style():
                   'foreground': '#555555'
               }
           },
-          'Finished.TEntry': {
-              'configure': {
-                  'fieldbackground': '#e0e0e0',
-                  'foreground': 'black',
-                  'lightcolor': '#ffffff',
-                  'bordercolor': '#a0a0a0',
-              }
-          },
           'Warning.TLabel': {
               'configure': {
                   'foreground': 'red',
@@ -169,7 +151,7 @@ def style():
                   'padding': 5
               }
           },
-          'ThemeSelector.TButton': {
+          'Selectors.TButton': {
               'configure': {
                   'anchor': 'c',
                   'background': "#e0e0e0",
@@ -179,7 +161,7 @@ def style():
                   'borderwidth': 1,
                   'lightcolor': '#ffffff',
                   'bordercolor': '#a0a0a0',
-                  'relief': 'raised'
+                  'relief': 'solid'
               },
               'map': {
                   'background': [('active', '#d0d0d0'), ('pressed', '#b0b0b0')]
@@ -198,7 +180,7 @@ def style():
                   'foreground': '#ffffff',
                   'selectbackground': '#4a98cf',
                   'selectforeground': 'white',
-                  'insertcolor':'yellow'
+                  'insertcolor': 'yellow'
               }
           },
           'TButton': {
@@ -211,7 +193,7 @@ def style():
                   'borderwidth': 2,
                   'lightcolor': '#ff0000',
                   'bordercolor': '#ffff00',
-                  'relief': 'raised'
+                  'relief': 'solid'
               },
               'map': {
                   'background': [('active', '#222222'), ('pressed', '#000000')],
@@ -223,11 +205,10 @@ def style():
                   'fieldbackground': "#000000",
                   'foreground': '#ffff00',
                   'padding': 6,
-                  'font': ('Helvetica', 14, 'bold'),
                   'borderwidth': 2,
-                  'lightcolor': '#ff0000',
+                  'lightcolor': '#ffff00',
                   'bordercolor': '#ffff00',
-                  'relief': 'raised'
+                  'relief': 'solid'
               }
           },
           'TLabel': {
@@ -249,22 +230,14 @@ def style():
                   'foreground': '#ff8800'
               }
           },
-          'Finished.TEntry': {
-              'configure': {
-                  'fieldbackground': '#000000',
-                  'foreground': '#ffff00',
-                  'lightcolor': '#ff0000',
-                  'bordercolor': '#ffff00',
-              }
-          },
           'Warning.TLabel': {
               'configure': {
                   'foreground': '#ff0000',
-                  'font': ('Arial', 15, 'bold'),
+                  'font': ('Arial', 15),
                   'padding': 5
               }
           },
-          'ThemeSelector.TButton': {
+          'Selectors.TButton': {
               'configure': {
                   'anchor': 'c',
                   'background': "#000000",
@@ -274,7 +247,7 @@ def style():
                   'borderwidth': 2,
                   'lightcolor': '#ff0000',
                   'bordercolor': '#ffff00',
-                  'relief': 'raised'
+                  'relief': 'solid'
               },
               'map': {
                   'background': [('active', '#222222'), ('pressed', '#000000')],
