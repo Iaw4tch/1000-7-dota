@@ -1,5 +1,8 @@
 # Dota 2 Range Flooder
 
+## Языки
+**[Английский](README.md)**
+
 ## Внешний вид
 ![](images/ru.png)
 
